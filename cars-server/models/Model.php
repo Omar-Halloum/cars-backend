@@ -36,33 +36,60 @@ abstract class Model{
     public static function insert(mysqli $connection, array $attributes){
         $columns = array_keys($attributes);
         $values = array_values($attributes);
-        
+
         $placeholders = rtrim(str_repeat('?, ', count($values)), ', ');
         $types = '';
-        
+
         foreach ($attributes as $value) { 
             if(gettype($value) == "integer"){ 
                 $types .= "i"; 
-            
+
             }elseif(gettype($value) == "double"){ 
                 $types .= "d"; 
-            
+
             }else{ 
                 $types .= "s";
             } 
         }
-    
+
         $sql = sprintf(
             "INSERT INTO %s (%s) VALUES (%s)",
             static::$table,
             implode(', ', $columns),
             $placeholders
         );
-    
+
         $query = $connection->prepare($sql);
         $query->bind_param($types, ...$values);
         $query->execute();
     }
+
+    public static function update(mysqli $connection, string $id, string $primary_key = "id", $attribute_name, $attribute_value){
+        $sql = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
+                static::$table,
+                $attribute_name,
+                $primary_key);
+        
+        $type="";
+
+        if(gettype($attribute_value) == "integer"){ 
+            $type = "i"; 
+
+        }elseif(gettype($attribute_value) == "double"){ 
+            $type = "d"; 
+
+        }else{ 
+            $type = "s";
+        }
+
+        $type .= "i";
+
+        $query = $connection->prepare($sql);
+        $query->bind_param($type, $attribute_value, $id);
+        $query->execute();
+
+    }
+
 
 }
 
