@@ -36,7 +36,7 @@ class CarService {
         global $connection;
         $car = Car::find($connection, $id);
         if ($car) {
-            $car->delete($connection);
+            $car->delete($connection, $id);
         }
     }
 }

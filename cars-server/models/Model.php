@@ -33,7 +33,7 @@ abstract class Model{
         return $car_objects;
     }
 
-    public function delete(mysqli $connection, string $primary_key = "id"){
+    public function delete(mysqli $connection,int $id, string $primary_key = "id"){
         $sql = sprintf("DELETE FROM %s WHERE %s = ? ",
                         static::$table, 
                         $primary_key);
@@ -74,18 +74,18 @@ abstract class Model{
         $query->execute();
     }
 
-    public static function update(mysqli $connection, string $id, string $primary_key = "id", $attribute_name, $attribute_value){
+    public static function update(mysqli $connection, int $id, $column, $value, string $primary_key = "id"){
         $sql = sprintf("UPDATE %s SET %s = ? WHERE %s = ?",
                 static::$table,
-                $attribute_name,
+                $column,
                 $primary_key);
         
         $type="";
 
-        if(gettype($attribute_value) == "integer"){ 
+        if(gettype($value) == "integer"){ 
             $type = "i"; 
 
-        }elseif(gettype($attribute_value) == "double"){ 
+        }elseif(gettype($value) == "double"){ 
             $type = "d"; 
 
         }else{ 
@@ -95,7 +95,7 @@ abstract class Model{
         $type .= "i";
 
         $query = $connection->prepare($sql);
-        $query->bind_param($type, $attribute_value, $id);
+        $query->bind_param($type, $value, $id);
         $query->execute();
 
     }
