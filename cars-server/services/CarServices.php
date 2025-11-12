@@ -1,6 +1,9 @@
 <?php
-require_once("../connection/connection.php");
+// require_once("../models/Car.php");
+// require_once("../connection/connection.php");
+
 require_once("../models/Car.php");
+require_once("../connection/connection.php");
 
 class CarService {
 
